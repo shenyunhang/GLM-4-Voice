@@ -46,7 +46,7 @@ class AudioDecoder:
         self.speech_window = np.hamming(2 * self.source_cache_len)
 
     def token2wav(self, token, uuid, prompt_token=torch.zeros(1, 0, dtype=torch.int32),
-                  prompt_feat=torch.zeros(1, 0, 80), embedding=torch.zeros(1, 192), finalize=False):
+                  prompt_feat=torch.zeros(1, 0, 80), embedding=torch.zeros(1, 192), finalize=False, option_steps=10):
         tts_mel = self.flow.inference(token=token.to(self.device),
                                       token_len=torch.tensor([token.shape[1]], dtype=torch.int32).to(self.device),
                                       prompt_token=prompt_token.to(self.device),
@@ -55,7 +55,8 @@ class AudioDecoder:
                                       prompt_feat=prompt_feat.to(self.device),
                                       prompt_feat_len=torch.tensor([prompt_feat.shape[1]], dtype=torch.int32).to(
                                           self.device),
-                                      embedding=embedding.to(self.device))
+                                      embedding=embedding.to(self.device),
+                                      option_steps=option_steps)
 
         # mel overlap fade in out
         if self.mel_overlap_dict[uuid] is not None:
