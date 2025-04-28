@@ -107,7 +107,8 @@ class MaskedDiffWithXvec(torch.nn.Module):
                   prompt_token_len,
                   prompt_feat,
                   prompt_feat_len,
-                  embedding):
+                  embedding,
+                  option_steps=10):
         assert token.shape[0] == 1
         # xvec projection
         embedding = F.normalize(embedding, dim=1)
@@ -137,7 +138,7 @@ class MaskedDiffWithXvec(torch.nn.Module):
             mask=mask.unsqueeze(1),
             spks=embedding,
             cond=conds,
-            n_timesteps=10
+            n_timesteps=option_steps
         )
         if prompt_feat.shape[1] != 0:
             feat = feat[:, :, prompt_feat.shape[1]:]
